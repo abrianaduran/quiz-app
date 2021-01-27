@@ -103,12 +103,10 @@ function generateAnswers() {
   for(let i = 0; i < answersArray.length; i++) {
     let answer = answersArray[i];
   answersHtml += `
-  <form>
     <div class="question-number-${i}">
       <input type="radio" name="options" id="option${i + 1}" value="${answer}" required> 
       <label for="option${i + 1}">${answer}</label>
-     </div>
-  </form>`;
+     </div>`;
   }
   return answersHtml;
 
@@ -124,8 +122,11 @@ function generateQuestions() {
         <p class="question">${questionNumber.question}</p>
       </div>
       <div>
-        ${generateAnswers()}
+        <form>
+          ${generateAnswers()}
+        </form>
       </div>
+      <div id="option-container-id">
       <div class="buttons">
         <button type="submit" id="submit-btn" class="btn">Submit Answer</button>
         <button type="button" id="next-btn" class="hidden btn">Next</button>
@@ -138,7 +139,7 @@ function generateQuestions() {
 }
 function generateFeedback(answerStatus) {
   console.log('generateFeedback');
-  let correctAnswer = store.questions[store.questionNumber].correctAnswer;
+  
   let html = '';
   if (answerStatus === true) {
     html = `<p class="feedback-correct">Correct! Good job!</p>`;
@@ -146,6 +147,8 @@ function generateFeedback(answerStatus) {
   }
   else if (answerStatus === false){
     html = '<p class="feedback-incorrect">Incorrect</p>';
+  } else {
+    html = '<p>No answer given</p>';
   }
   return html;
 }
@@ -208,17 +211,21 @@ function handleSubmit() {
     event.preventDefault();
     const questionNumber = store.questions[store.questionNumber];
     let selectedOption = $('input[name=options]:checked').val();
-    let optionContainerId = `#option-container-${questionNumber.answers.findIndex(i => i === selectedOption)}`;
-    
+    let optionContainerId = `#option-container-id`
     if(selectedOption === questionNumber.correctAnswer) {
       store.score++;
       let feedbackTrue = generateFeedback(true);
       $(optionContainerId).append(feedbackTrue);
     }
+    else if (selectedOption === undefined){
+      let feedbackUndefined = generateFeedback(undefined);
+      $(optionContainerId).append(feedbackUndefined);
+    }
     else {
       let feedbackFalse = generateFeedback(false);
       $(optionContainerId).append(feedbackFalse);
     }
+    
     store.questionNumber++;
     $('#submit-btn').hide();
     $('input[type=radio]').each(() => {
@@ -237,7 +244,7 @@ function restart() {
 
 function handleRestart() {
   console.log('handleRestart');
-$('main').on('click', '#restart', function () {
+$('main').on('click', '#restart-btn', function () {
   restart();
   render();
 });
@@ -247,7 +254,6 @@ function handleQuizApp(){
 render();
 handleStart();
 handleNext();
-
 handleRestart();
 }
 
