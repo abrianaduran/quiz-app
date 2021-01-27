@@ -81,7 +81,7 @@ function generateStart() {
       <p>Each sign of the zodiac is associated with one of the four elements: earth, air, fire, and water.
       Test your knowledge of the zodiac in this astrology quiz!
       </p>
-      <button type="button" id="start-btn">Start!</button>
+      <button type="button" id="start-btn" class="btn">Start!</button>
     </div>`;
 }
 
@@ -105,7 +105,7 @@ function generateAnswers() {
   answersHtml += `
   <form>
     <div class="question-number-${i}">
-      <input type="radio" name="options" id="option${i + 1}" class="${answer}" required> 
+      <input type="radio" name="options" id="option${i + 1}" value="${answer}" required> 
       <label for="option${i + 1}">${answer}</label>
      </div>
   </form>`;
@@ -120,15 +120,15 @@ function generateQuestions() {
   
     return `
     <div>
-    <form id="question-form"><div class="question">
-        <p>${questionNumber.question}</p>
+    <form id="question-form"><div>
+        <p class="question">${questionNumber.question}</p>
       </div>
       <div>
         ${generateAnswers()}
       </div>
       <div class="buttons">
-        <button type="submit" id="submit-btn">Submit Answer</button>
-        <button type="button" id="next-btn" class="hidden">Next</button>
+        <button type="submit" id="submit-btn" class="btn">Submit Answer</button>
+        <button type="button" id="next-btn" class="hidden btn">Next</button>
         
       </div>
     </form>
@@ -154,7 +154,7 @@ function generateResults() {
   console.log('generateResults');
   return`<div class="results">
         <p class="results">Congratulations! Your Score is: ${store.score}/${store.questions.length}</p>
-        <button type="button" id="restart-btn">Restart!</button>
+        <button type="button" id="restart-btn" class="btn">Restart!</button>
     </div>`;
 }
 

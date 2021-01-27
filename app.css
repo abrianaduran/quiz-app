@@ -9,16 +9,44 @@
 
 * {
  background-color: rgb(241, 209, 239);
+ font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 #next-button{
   display: none;
 }
-.text-center {
 
+h1 {
+  font-size: 35px;
+  text-align: center;
+  background-color: rgb(212, 181, 211);
+  margin: 0 0 0 0 ;
+  padding: 30px;
+  height: 50px;
+}
+
+div {
+  font-size: 20px;
+  margin: 10px 20px;
+}
+
+p {
+  font-size: 20px;
+  margin: 10px 20px;
+}
+.question {
+  font-size: 25px;
 }
 
 .btn {
-  
+  background-color: #523963;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  margin: 10px 20px;
+  text-align: center;
+  border-radius: 12px;
+  display: block;
+  font-size: 18px;
 }
 
 .btn:hover {
@@ -32,5 +60,5 @@
   display:none;
 }
 @media (max-width: 768px) {
-  
+
 }
