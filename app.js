@@ -103,9 +103,9 @@ function generateAnswers() {
   for(let i = 0; i < answersArray.length; i++) {
     let answer = answersArray[i];
   answersHtml += `
-    <div class="question-number-${i}">
-      <input type="radio" name="options" id="option${i + 1}" value="${answer}" required> 
-      <label for="option${i + 1}">${answer}</label>
+  <div id="option-container-id${i}">
+        <input type="radio" name="options" id="option${i + 1}" value="${answer}" required> 
+        <label for="option${i + 1}" required>${answer}</label>
      </div>`;
   }
   return answersHtml;
@@ -146,7 +146,7 @@ function generateFeedback(answerStatus) {
 
   }
   else if (answerStatus === false){
-    html = '<p class="feedback-incorrect">Incorrect</p>';
+    html = `<p class="feedback-incorrect">Incorrect. Correct answer was: ${store.questions[store.questionNumber].correctAnswer}</p>`;
   } else {
     html = '<p>No answer given</p>';
   }
@@ -211,27 +211,36 @@ function handleSubmit() {
     event.preventDefault();
     const questionNumber = store.questions[store.questionNumber];
     let selectedOption = $('input[name=options]:checked').val();
-    let optionContainerId = `#option-container-id`
+    let optionContainerId = `#option-container-id${questionNumber.answers.findIndex(i => i === selectedOption)}`;
+    
     if(selectedOption === questionNumber.correctAnswer) {
       store.score++;
       let feedbackTrue = generateFeedback(true);
       $(optionContainerId).append(feedbackTrue);
-    }
-    else if (selectedOption === undefined){
-      let feedbackUndefined = generateFeedback(undefined);
-      $(optionContainerId).append(feedbackUndefined);
-    }
-    else {
-      let feedbackFalse = generateFeedback(false);
-      $(optionContainerId).append(feedbackFalse);
-    }
-    
-    store.questionNumber++;
+      store.questionNumber++;
     $('#submit-btn').hide();
     $('input[type=radio]').each(() => {
       $('input[type=radio]').attr('disabled', true);
     });
     $('#next-btn').show();
+    }
+    else if (selectedOption === undefined){
+
+      let feedbackUndefined = generateFeedback(undefined);
+      $(optionContainerId).remove(feedbackUndefined);
+    }
+    else {
+      let feedbackFalse = generateFeedback(false);
+      $(optionContainerId).append(feedbackFalse);
+      store.questionNumber++;
+      $('#submit-btn').hide();
+    $('input[type=radio]').each(() => {
+      $('input[type=radio]').attr('disabled', true);
+    });
+    $('#next-btn').show();
+    }
+    
+    
   });
 }
 
