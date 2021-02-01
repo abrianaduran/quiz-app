@@ -76,7 +76,6 @@ const store = {
 // These functions return HTML templates
 
 function generateStart() {
-  console.log('generateStart');
   return `<div class="start-page">
       <p>Each sign of the zodiac is associated with one of the four elements: earth, air, fire, and water.
       Test your knowledge of the zodiac in this astrology quiz!
@@ -86,26 +85,23 @@ function generateStart() {
 }
 
 function generateScore() {
-  console.log('generateScore');
 return `<p class="score-question">Score:${store.score}/${store.questions.length}</p>`;
 
 }
 
 function generateQuestionNumber() {
-  console.log('generateQuestionNumber');
   return `<p class="score-question">Question Number:${store.questionNumber + 1}/${store.questions.length}</p>`;
 }
 
 function generateAnswers() {
-  console.log('generateAnswers');
   const answersArray = store.questions[store.questionNumber].answers;
   let answersHtml = '';
   for(let i = 0; i < answersArray.length; i++) {
     let answer = answersArray[i];
   answersHtml += `
-  <div id="option-container-id${i}">
-        <input type="radio" name="options" id="option${i + 1}" value="${answer}" required> 
-        <label for="option${i + 1}" required>${answer}</label>
+    <div class="question-number-${i}">
+      <input type="radio" name="options" id="option${i + 1}" value="${answer}" required> 
+      <label for="option${i + 1}">${answer}</label>
      </div>`;
   }
   return answersHtml;
@@ -113,7 +109,6 @@ function generateAnswers() {
 }
 
 function generateQuestions() {
-  console.log('generateQuestions');
   let questionNumber = store.questions[store.questionNumber];
   
     return `
@@ -138,23 +133,18 @@ function generateQuestions() {
   
 }
 function generateFeedback(answerStatus) {
-  console.log('generateFeedback');
-  
   let html = '';
   if (answerStatus === true) {
     html = `<p class="feedback-correct">Correct! Good job!</p>`;
-
   }
   else if (answerStatus === false){
     html = `<p class="feedback-incorrect">Incorrect. Correct answer was: ${store.questions[store.questionNumber].correctAnswer}</p>`;
-  } else {
-    html = '<p>No answer given</p>';
-  }
+  } 
   return html;
-}
+  }
+  
 
 function generateResults() {
-  console.log('generateResults');
   return`<div class="results">
         <p class="results">Congratulations! Your Score is: ${store.score}/${store.questions.length}</p>
         <button type="button" id="restart-btn" class="btn">Restart!</button>
@@ -166,7 +156,6 @@ function generateResults() {
 // This function conditionally replaces the contents of the <main> tag based on the state of the store
 
 function render() {
-  console.log('render');
   let html = '';
 
   if(store.quizStarted === false) {
@@ -191,15 +180,12 @@ function render() {
 
 function handleStart() {
   $('body').on('click', '#start-btn', function(event) {
-    console.log('handleStart');
     store.quizStarted = true;
     render();
-    handleSubmit();
   });
 }
 
 function handleNext() {
-  console.log('handleNext');
   $('main').on('click', '#next-btn', function(event) {
     render();
   });
@@ -207,52 +193,41 @@ function handleNext() {
 
 function handleSubmit() {
   $('main').on('click', '#submit-btn', function(event) {
-    console.log('handleSubmit');
     event.preventDefault();
+    event.stopPropagation();
     const questionNumber = store.questions[store.questionNumber];
     let selectedOption = $('input[name=options]:checked').val();
-    let optionContainerId = `#option-container-id${questionNumber.answers.findIndex(i => i === selectedOption)}`;
-    
+    let optionContainerId = `#option-container-id`
+
     if(selectedOption === questionNumber.correctAnswer) {
       store.score++;
       let feedbackTrue = generateFeedback(true);
       $(optionContainerId).append(feedbackTrue);
-      store.questionNumber++;
+    }
+    else if (selectedOption === undefined){
+      return;
+    }
+    else {
+      let feedbackFalse = generateFeedback(false);
+      $(optionContainerId).append(feedbackFalse);
+    }
+    
+    store.questionNumber++;
     $('#submit-btn').hide();
     $('input[type=radio]').each(() => {
       $('input[type=radio]').attr('disabled', true);
     });
     $('#next-btn').show();
-    }
-    else if (selectedOption === undefined){
-
-      let feedbackUndefined = generateFeedback(undefined);
-      $(optionContainerId).remove(feedbackUndefined);
-    }
-    else {
-      let feedbackFalse = generateFeedback(false);
-      $(optionContainerId).append(feedbackFalse);
-      store.questionNumber++;
-      $('#submit-btn').hide();
-    $('input[type=radio]').each(() => {
-      $('input[type=radio]').attr('disabled', true);
-    });
-    $('#next-btn').show();
-    }
-    
-    
   });
 }
 
 function restart() {
-  console.log('restart');
   store.quizStarted = false,
   store.questionNumber = 0,
   store.score = 0
 }
 
 function handleRestart() {
-  console.log('handleRestart');
 $('main').on('click', '#restart-btn', function () {
   restart();
   render();
@@ -264,6 +239,7 @@ render();
 handleStart();
 handleNext();
 handleRestart();
+handleSubmit();
 }
 
 $(handleQuizApp);
