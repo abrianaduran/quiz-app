@@ -113,21 +113,23 @@ function generateQuestions() {
   
     return `
     <div>
-    <form id="question-form"><div>
-        <p class="question">${questionNumber.question}</p>
-      </div>
-      <div>
-        <form>
-          ${generateAnswers()}
-        </form>
-      </div>
+      <form id="question-form">
+        <div>
+          <p class="question">${questionNumber.question}</p>
+        </div>
+        <div>
+          <form>
+            ${generateAnswers()}
+          </form>
+        </div>
       <div id="option-container-id">
-      <div class="buttons">
-        <button type="submit" id="submit-btn" class="btn">Submit Answer</button>
-        <button type="button" id="next-btn" class="hidden btn">Next</button>
-        
-      </div>
-    </form>
+        <div class="buttons">
+          <form id="submit-button">
+            <button type="submit" id="submit-btn" class="btn">Submit Answer</button>
+          </form>
+            <button type="button" id="next-btn" class="hidden btn">Next</button>
+        </div>
+      </form>
     </div>`;
     
   
@@ -140,8 +142,9 @@ function generateFeedback(answerStatus) {
   else if (answerStatus === false){
     html = `<p class="feedback-incorrect">Incorrect. Correct answer was: ${store.questions[store.questionNumber].correctAnswer}</p>`;
   } 
+
   return html;
-  }
+  } 
   
 
 function generateResults() {
@@ -204,7 +207,8 @@ function handleSubmit() {
       let feedbackTrue = generateFeedback(true);
       $(optionContainerId).append(feedbackTrue);
     }
-    else if (selectedOption === undefined){
+    else if (selectedOption === undefined){  
+      alert('Please select an option.');
       return;
     }
     else {
